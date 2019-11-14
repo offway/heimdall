@@ -186,7 +186,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<finalName>apollo-${profiles.active}</finalName>
+		<finalName>heimdall-${profiles.active}</finalName>
 	</build>
 
 </project>
