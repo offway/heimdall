@@ -42,6 +42,9 @@ public class GoodsDto implements Serializable {
     @ApiModelProperty(required = true,value ="页大小")
     private int pageSize;
 
+    @ApiModelProperty(required = true,value ="类目二")
+    private String categoryDetails;
+
 
 
     public String getName() {
@@ -124,5 +127,13 @@ public class GoodsDto implements Serializable {
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
+
+    public String getCategoryDetails() {
+        return categoryDetails;
+    }
+
+    public void setCategoryDetails(String categoryDetails) {
+        this.categoryDetails = categoryDetails;
+    }
     
 }
