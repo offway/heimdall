@@ -60,6 +60,9 @@ public class PhBanner implements Serializable {
      **/
     private String redirectId;
 
+    /** 类型[0-男装,1-女装] **/
+    private String type;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -145,6 +148,15 @@ public class PhBanner implements Serializable {
 
     public void setRedirectId(String redirectIdl) {
         this.redirectId = redirectIdl;
+    }
+
+    @Column(name = "type", length = 2)
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

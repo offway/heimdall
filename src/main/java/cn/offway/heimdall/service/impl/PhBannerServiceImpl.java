@@ -55,6 +55,6 @@ public class PhBannerServiceImpl implements PhBannerService {
                 criteriaQuery.where(predicates);
                 return null;
             }
-        },new Sort("sort"));
+        },new Sort("id"));
     }
 }
