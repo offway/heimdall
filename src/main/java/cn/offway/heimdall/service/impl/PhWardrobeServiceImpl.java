@@ -10,6 +10,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,6 +39,11 @@ import cn.offway.heimdall.service.SmsService;
 import cn.offway.heimdall.utils.CommonResultCode;
 import cn.offway.heimdall.utils.JsonResult;
 import cn.offway.heimdall.utils.JsonResultHelper;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 
 /**
@@ -105,7 +111,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		phWardrobeRepository.delInvalid(unionid);
 		phWardrobeRepository.delLess(unionid);
 	}
-	
+
 	@Override
 	public JsonResult add(String unionid,Long goodsId,String color,String size,String useDate) throws Exception{
 
@@ -277,6 +283,28 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		resultMap.put("effect", effs);
 		
 		return resultMap;
+	}
+
+	@Override
+	public List<PhWardrobe> findState(String unionid, String state){
+		return phWardrobeRepository.findAll(new Specification<PhWardrobe>() {
+			@Override
+			public Predicate toPredicate(Root<PhWardrobe> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				List<Predicate> params = new ArrayList<Predicate>();
+
+				if(StringUtils.isNotBlank(unionid)){
+					params.add(criteriaBuilder.equal(root.get("unionid"), unionid));
+				}
+
+				if(StringUtils.isNotBlank(state)){
+					params.add(criteriaBuilder.equal(root.get("state"), state));
+				}
+
+				Predicate[] predicates = new Predicate[params.size()];
+				criteriaQuery.where(params.toArray(predicates));
+				return null;
+			}
+		});
 	}
 	
 	@Override

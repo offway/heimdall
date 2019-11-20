@@ -29,5 +29,7 @@ public interface PhWardrobeService{
 
 	Map<String, Object> list(List<Long> wrids);
 
+	List<PhWardrobe> findState(String unionid, String state);
+
 	JsonResult addOrder(String unionid, Long[] wardrobeIds, Long addrId, String users) throws Exception;
 }

@@ -73,6 +73,13 @@ public class WardrobeController {
 		return jsonResultHelper.buildSuccessJsonResult(null);
 	}
 
+	@ApiOperation("查询状态")
+	@PostMapping("/auditState")
+	public JsonResult auditState(@ApiParam("unionid") @RequestParam String unionid,
+								 @ApiParam("状态[0-待审核,1-审核通过,2-审核不通过]") @RequestParam String state){
+		return jsonResultHelper.buildSuccessJsonResult(phWardrobeService.findState(unionid,state));
+	}
+
 	@ApiOperation("确认订单-查询衣柜")
 	@GetMapping("/listByIds")
 	public JsonResult wardrobelist(@ApiParam("衣柜ID,多个用逗号隔开") @RequestParam String wardrobeIds){
