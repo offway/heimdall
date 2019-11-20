@@ -153,7 +153,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 			}*/
 		}
 
-		
+
 		PhGoods phGoods = phGoodsService.findOne(goodsId);
 		PhWardrobe phWardrobe = new PhWardrobe();
 		phWardrobe.setBrandId(phGoods.getBrandId());
@@ -170,6 +170,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		phWardrobe.setIsOffway(phGoods.getIsOffway());
 		phWardrobe.setType(phGoods.getType());
 		phWardrobe.setUnionid(unionid);
+		phWardrobe.setState("3");
 		phWardrobe.setUseDate(DateUtils.parseDate(useDate, "yyyy-MM-dd"));
 		
 		save(phWardrobe);

@@ -56,7 +56,7 @@ public class PhWardrobeAudit implements Serializable {
     /** 返图时间 **/
     private Date photoDate;
 
-    /** 归还时间 **/
+    /** 使用时间 **/
     private Date useDate;
 
     /** 创建时间 **/
@@ -70,6 +70,9 @@ public class PhWardrobeAudit implements Serializable {
 
     /** 备注 **/
     private String remark;
+
+    /** 归还时间 **/
+    private Date returnDate;
 
 
     @Id
@@ -246,6 +249,16 @@ public class PhWardrobeAudit implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "return_date")
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
     }
 
 }

@@ -1,30 +1,24 @@
 package cn.offway.heimdall.controller;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import cn.offway.heimdall.domain.PhWardrobe;
-import cn.offway.heimdall.domain.PhWardrobe;
-import cn.offway.heimdall.service.PhWardrobeService;
-import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import cn.offway.heimdall.domain.PhWardrobeAudit;
+import cn.offway.heimdall.service.PhWardrobeAuditService;
 import cn.offway.heimdall.service.PhWardrobeService;
 import cn.offway.heimdall.utils.CommonResultCode;
 import cn.offway.heimdall.utils.JsonResult;
 import cn.offway.heimdall.utils.JsonResultHelper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 衣柜
@@ -42,6 +36,9 @@ public class WardrobeController {
 	
 	@Autowired
 	private PhWardrobeService phWardrobeService;
+
+	@Autowired
+	private PhWardrobeAuditService phWardrobeAuditService;
 	
 	@ApiOperation(value="加入衣柜",notes="返回码：200=成功； 1009=衣柜调价衣物以至8件上限；1010=您的信用分太低，不能再借衣服；1011=您有一批订单反馈图未上传，上传后即可借衣；1012=有一笔订单未归还")
 	@PostMapping("/add")
@@ -60,7 +57,22 @@ public class WardrobeController {
 		
 		return jsonResultHelper.buildSuccessJsonResult(phWardrobeService.list(unionid));
 	}
-	
+
+	@ApiOperation("申请使用")
+	@GetMapping("/audit")
+	public JsonResult audit(@ApiParam("unionid") @RequestParam String unionid,
+							@ApiParam("商品ID") @RequestParam Long goodsId,
+							@ApiParam("颜色") @RequestParam String color,
+							@ApiParam("尺码") @RequestParam String size,
+							@ApiParam("使用日期,格式yyyy-MM-dd") @RequestParam String useDate,
+							@ApiParam("使用艺人") @RequestParam String useName,
+							@ApiParam("使用用途") @RequestParam String content,
+							@ApiParam("归还时间") @RequestParam String returnDate,
+							@ApiParam("返图时间") @RequestParam String photoDate) throws ParseException {
+		phWardrobeAuditService.add(unionid,goodsId,color,size,useDate,useName,content,returnDate,photoDate);
+		return jsonResultHelper.buildSuccessJsonResult(null);
+	}
+
 	@ApiOperation("确认订单-查询衣柜")
 	@GetMapping("/listByIds")
 	public JsonResult wardrobelist(@ApiParam("衣柜ID,多个用逗号隔开") @RequestParam String wardrobeIds){
