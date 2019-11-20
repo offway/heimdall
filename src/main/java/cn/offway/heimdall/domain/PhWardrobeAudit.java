@@ -5,20 +5,29 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 衣柜
+ * 衣柜审核
  *
  * @author wn
- * @version $v: 1.0.0, $time:2018-02-12 11:26:00 Exp $
+ * @version $v: 1.0.0, $time:2019-11-20 14:44:49 Exp $
  */
 @Entity
-@Table(name = "ph_wardrobe")
-public class PhWardrobe implements Serializable {
+@Table(name = "ph_wardrobe_audit")
+public class PhWardrobeAudit implements Serializable {
 
     /** ID **/
     private Long id;
 
+    /** 衣柜id **/
+    private Long wardrobeId;
+
     /** 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。 **/
     private String unionid;
+
+    /** 使用艺人 **/
+    private String useName;
+
+    /** 使用用途 **/
+    private String content;
 
     /** 商品ID **/
     private Long goodsId;
@@ -38,32 +47,29 @@ public class PhWardrobe implements Serializable {
     /** 品牌LOGO **/
     private String brandLogo;
 
-    /** 是否自营[0-否,1-是] **/
-    private String isOffway;
-
-    /** 类目[男装,女装] **/
-    private String type;
-
-    /** 类目[未发售,长袖,外套,短裤,长裤等] **/
-    private String category;
-
     /** 尺码 **/
     private String size;
 
     /** 颜色 **/
     private String color;
 
-    /** 使用日期 **/
+    /** 返图时间 **/
+    private Date photoDate;
+
+    /** 归还时间 **/
     private Date useDate;
 
     /** 创建时间 **/
     private Date createTime;
 
+    /** 状态[0-待审核,1-通过,2-拒绝] **/
+    private String state;
+
+    /** 拒绝理由 **/
+    private String reason;
+
     /** 备注 **/
     private String remark;
-
-    /** 状态[0-待审核,1-审核通过,2-审核不通过,3-无需审核] **/
-    private String state;
 
 
     @Id
@@ -77,6 +83,15 @@ public class PhWardrobe implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "wardrobe_id", length = 11)
+    public Long getWardrobeId() {
+        return wardrobeId;
+    }
+
+    public void setWardrobeId(Long wardrobeId) {
+        this.wardrobeId = wardrobeId;
+    }
+
     @Column(name = "unionid", length = 200)
     public String getUnionid() {
         return unionid;
@@ -84,6 +99,24 @@ public class PhWardrobe implements Serializable {
 
     public void setUnionid(String unionid) {
         this.unionid = unionid;
+    }
+
+    @Column(name = "use_name", length = 200)
+    public String getUseName() {
+        return useName;
+    }
+
+    public void setUseName(String useName) {
+        this.useName = useName;
+    }
+
+    @Column(name = "content", length = 200)
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Column(name = "goods_id", length = 11)
@@ -131,40 +164,13 @@ public class PhWardrobe implements Serializable {
         this.brandName = brandName;
     }
 
-    @Column(name = "brand_logo", length = 50)
+    @Column(name = "brand_logo", length = 200)
     public String getBrandLogo() {
         return brandLogo;
     }
 
     public void setBrandLogo(String brandLogo) {
         this.brandLogo = brandLogo;
-    }
-
-    @Column(name = "is_offway", length = 2)
-    public String getIsOffway() {
-        return isOffway;
-    }
-
-    public void setIsOffway(String isOffway) {
-        this.isOffway = isOffway;
-    }
-
-    @Column(name = "type", length = 10)
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @Column(name = "category", length = 20)
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     @Column(name = "size", length = 10)
@@ -183,6 +189,16 @@ public class PhWardrobe implements Serializable {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "photo_date")
+    public Date getPhotoDate() {
+        return photoDate;
+    }
+
+    public void setPhotoDate(Date photoDate) {
+        this.photoDate = photoDate;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -205,15 +221,6 @@ public class PhWardrobe implements Serializable {
         this.createTime = createTime;
     }
 
-    @Column(name = "remark", length = 200)
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
     @Column(name = "state", length = 2)
     public String getState() {
         return state;
@@ -221,6 +228,24 @@ public class PhWardrobe implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    @Column(name = "reason", length = 200)
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    @Column(name = "remark", length = 200)
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }
