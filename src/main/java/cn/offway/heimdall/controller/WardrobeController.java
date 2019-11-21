@@ -9,6 +9,7 @@ import cn.offway.heimdall.utils.JsonResult;
 import cn.offway.heimdall.utils.JsonResultHelper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * 衣柜
@@ -77,7 +76,20 @@ public class WardrobeController {
 	@PostMapping("/auditState")
 	public JsonResult auditState(@ApiParam("unionid") @RequestParam String unionid,
 								 @ApiParam("状态[0-待审核,1-审核通过,2-审核不通过]") @RequestParam String state){
-		return jsonResultHelper.buildSuccessJsonResult(phWardrobeService.findState(unionid,state));
+		List<Object> list = new ArrayList<>();
+		List<PhWardrobe> wardrobe = phWardrobeService.findState(unionid,state);
+		for (PhWardrobe phWardrobe : wardrobe) {
+			Map<String,Object> map = new HashMap<>();
+			PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(phWardrobe.getId());
+			map.put("returnDate",DateFormatUtils.format(wardrobeAudit.getReturnDate(), "yyyy-MM-dd"));
+			map.put("useDate",DateFormatUtils.format(wardrobeAudit.getUseDate(), "yyyy-MM-dd"));
+			map.put("useName",wardrobeAudit.getUseName());
+			map.put("photoDate", DateFormatUtils.format(wardrobeAudit.getPhotoDate(), "yyyy-MM-dd"));
+			map.put("content",wardrobeAudit.getContent());
+			map.put("wardrobeData",phWardrobe);
+			list.add(map);
+		}
+		return jsonResultHelper.buildSuccessJsonResult(list);
 	}
 
 	@ApiOperation("确认订单-查询衣柜")

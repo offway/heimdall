@@ -114,4 +114,9 @@ public class PhWardrobeAuditServiceImpl implements PhWardrobeAuditService {
 		wardrobeAudit.setReturnDate(DateUtils.parseDate(returnDate, "yyyy-MM-dd"));
 		return phWardrobeAuditRepository.save(wardrobeAudit);
 	}
+
+	@Override
+	public int auditCount(String unionid){
+		return phWardrobeAuditRepository.auditCount(unionid);
+	}
 }

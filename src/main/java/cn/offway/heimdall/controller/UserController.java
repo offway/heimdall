@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.offway.heimdall.domain.*;
+import cn.offway.heimdall.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -20,24 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.offway.heimdall.domain.PhAuth;
-import cn.offway.heimdall.domain.PhOrderExpressDetail;
-import cn.offway.heimdall.domain.PhOrderExpressInfo;
-import cn.offway.heimdall.domain.PhOrderGoods;
-import cn.offway.heimdall.domain.PhOrderInfo;
-import cn.offway.heimdall.domain.PhShowImage;
-import cn.offway.heimdall.domain.PhUserInfo;
 import cn.offway.heimdall.dto.AuthDto;
 import cn.offway.heimdall.dto.OrderInfoDto;
-import cn.offway.heimdall.service.PhAuthService;
-import cn.offway.heimdall.service.PhCodeService;
-import cn.offway.heimdall.service.PhCreditDetailService;
-import cn.offway.heimdall.service.PhOrderExpressDetailService;
-import cn.offway.heimdall.service.PhOrderExpressInfoService;
-import cn.offway.heimdall.service.PhOrderGoodsService;
-import cn.offway.heimdall.service.PhOrderInfoService;
-import cn.offway.heimdall.service.PhShowImageService;
-import cn.offway.heimdall.service.PhUserInfoService;
 import cn.offway.heimdall.utils.CommonResultCode;
 import cn.offway.heimdall.utils.JsonResult;
 import cn.offway.heimdall.utils.JsonResultHelper;
@@ -79,6 +65,9 @@ public class UserController {
 	
 	@Autowired
 	private PhCreditDetailService phCreditDetailService;
+
+	@Autowired
+	private PhWardrobeAuditService phWardrobeAuditService;
 
 
 
@@ -232,6 +221,7 @@ public class UserController {
 		resultMap.put("use", phOrderInfoService.findAll(unionid, "1").size());
 		resultMap.put("return", phOrderInfoService.findAll(unionid, "2").size());
 		resultMap.put("show", phOrderInfoService.findAll(unionid, "4").size());
+		resultMap.put("audit",String.valueOf(phWardrobeAuditService.auditCount(unionid)));
 		
 		return jsonResultHelper.buildSuccessJsonResult(resultMap); 
 	}
