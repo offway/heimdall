@@ -68,6 +68,11 @@ public class PhWardrobeAuditServiceImpl implements PhWardrobeAuditService {
 	}
 
 	@Override
+	public PhWardrobeAudit findByWardrobeId(Long id){
+		return phWardrobeAuditRepository.findByWardrobeId(id);
+	}
+
+	@Override
 	@Transactional
 	public PhWardrobeAudit add(String unionid, Long goodsId, String color, String size, String useDate, String useName, String content, String returnDate, String photoDate) throws ParseException {
 		PhWardrobeAudit wardrobeAudit = new PhWardrobeAudit();

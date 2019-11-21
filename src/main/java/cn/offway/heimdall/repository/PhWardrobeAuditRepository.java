@@ -14,4 +14,6 @@ import cn.offway.heimdall.domain.PhWardrobeAudit;
 public interface PhWardrobeAuditRepository extends JpaRepository<PhWardrobeAudit,Long>,JpaSpecificationExecutor<PhWardrobeAudit> {
 
 	/** 此处写一些自定义的方法 **/
+
+	PhWardrobeAudit findByWardrobeId(Long id);
 }

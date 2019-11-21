@@ -89,6 +89,9 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 	
 	@Autowired
 	private SmsService smsService;
+
+	@Autowired
+	private PhWardrobeAuditService phWardrobeAuditService;
 	
 	
 	@Override
@@ -194,6 +197,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		Map<String, List<PhWardrobe>> effMap = new HashMap<>();
+		Map<String,Object> map0 = new HashMap<>();
 		List<PhWardrobe> invalids = new ArrayList<>();
 
 		Date now = new Date();
@@ -225,6 +229,14 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 					if(null == wardrobes ||wardrobes.isEmpty()){
 						wardrobes = new ArrayList<>();
 					}
+					if ("0".equals(wr.getIsOffway())){
+						PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(wr.getId());
+						map0.put("useDate",DateFormatUtils.format(wardrobeAudit.getUseDate(), "yyyy-MM-dd"));
+						map0.put("returnDate",DateFormatUtils.format(wardrobeAudit.getReturnDate(), "yyyy-MM-dd"));
+						map0.put("photoDate",DateFormatUtils.format(wardrobeAudit.getPhotoDate(), "yyyy-MM-dd"));
+						map0.put("useName",wardrobeAudit.getUseName());
+						map0.put("content",wardrobeAudit.getContent());
+					}
 					wardrobes.add(wr);
 					effMap.put(key, wardrobes);
 					logger.info("正常");
@@ -244,6 +256,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 			map.put("brandName", keys[0]);
 			map.put("useDate", keys[1]);
 			map.put("data", effMap.get(key));
+			map.put("details", map0);
 			effs.add(map);
 		}
 		resultMap.put("effect", effs);

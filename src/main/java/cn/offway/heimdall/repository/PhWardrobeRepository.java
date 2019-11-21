@@ -25,7 +25,7 @@ public interface PhWardrobeRepository extends JpaRepository<PhWardrobe,Long>,Jpa
 	
 	@Modifying
 	@Transactional
-	@Query(nativeQuery=true,value="delete from ph_wardrobe where unionid=?1 and use_date<=DATE_FORMAT(NOW(),'%Y-%m-%d')")
+	@Query(nativeQuery=true,value="delete from ph_wardrobe where unionid=?1 and use_date<=DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 2 day),'%Y-%m-%d')")
 	int delInvalid(String unionid);
 	
 	@Modifying

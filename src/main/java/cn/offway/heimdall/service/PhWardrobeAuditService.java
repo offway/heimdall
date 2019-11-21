@@ -23,6 +23,8 @@ public interface PhWardrobeAuditService{
 
     List<PhWardrobeAudit> save(List<PhWardrobeAudit> entities);
 
+    PhWardrobeAudit findByWardrobeId(Long id);
+
     @Transactional
     PhWardrobeAudit add(String unionid, Long goodsId, String color, String size, String useDate, String useName, String content, String returnDate, String photoDate) throws ParseException;
 }
