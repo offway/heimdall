@@ -72,6 +72,22 @@ public class WardrobeController {
 		return jsonResultHelper.buildSuccessJsonResult(null);
 	}
 
+    @ApiOperation("删除审核记录")
+    @GetMapping("/delAudit")
+    public JsonResult delAudit(@ApiParam("unionid") @RequestParam String unionid,
+                               @ApiParam("衣柜ID") @RequestParam Long wardrobeId,
+                               @ApiParam("状态[0-审核中,1-审核成功,2-审核失败]") @RequestParam String state){
+	    PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(wardrobeId);
+	    if (unionid.equals(wardrobeAudit.getUnionid())){
+	        if ("0".equals(state) || "1".equals(state)){
+                phWardrobeService.delete(wardrobeId);
+            }else {
+	            phWardrobeAuditService.delete(wardrobeAudit.getId());
+            }
+        }
+        return jsonResultHelper.buildSuccessJsonResult(null);
+    }
+
 	@ApiOperation("查询状态")
 	@PostMapping("/auditState")
 	public JsonResult auditState(@ApiParam("unionid") @RequestParam String unionid,
@@ -106,8 +122,11 @@ public class WardrobeController {
 	
 	@ApiOperation("删除")
 	@PostMapping("/del")
-	public JsonResult del(@ApiParam("衣柜ID") @RequestParam Long wardrobeId) throws Exception{
-		phWardrobeService.delete(wardrobeId);
+	public JsonResult del(@ApiParam("衣柜ID") @RequestParam Long[] wardrobeIds) throws Exception{
+        List<Long> wrIds = Arrays.asList(wardrobeIds);
+        for (Long wrId : wrIds) {
+            phWardrobeService.delete(wrId);
+        }
 		return jsonResultHelper.buildSuccessJsonResult(null);
 	}
 	

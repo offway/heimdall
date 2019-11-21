@@ -106,6 +106,10 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 	
 	@Override
 	public void delete(Long id){
+		PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(id);
+		if (wardrobeAudit != null){
+			phWardrobeAuditService.delete(wardrobeAudit.getId());
+		}
 		phWardrobeRepository.delete(id);
 	}
 	
