@@ -501,6 +501,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 			phOrderGoods.setGoodsId(phWardrobe.getGoodsId());
 			phOrderGoods.setGoodsName(phWardrobe.getGoodsName());
 			PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndSizeAndColor(phWardrobe.getGoodsId(), phWardrobe.getSize(), phWardrobe.getColor());
+			phOrderGoods.setStockId(phGoodsStock.getId());
 			phOrderGoods.setSku(phGoodsStock.getSku());
 			phOrderGoods.setImage(phGoodsStock.getImage());
 			//phOrderGoods.setOrderId(orderId);
