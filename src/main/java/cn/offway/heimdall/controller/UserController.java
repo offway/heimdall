@@ -127,7 +127,9 @@ public class UserController {
 					}
 				}
 				if (goodsList.size()>0){
-					dto.setOrderNo(dto.getOrderNo()+"-"+s);
+					if (!"0".equals(s)){
+						dto.setOrderNo(dto.getOrderNo()+"-"+s);
+					}
 					dto.setGoods(goodsList);
 					dtos.add(dto);
 				}
