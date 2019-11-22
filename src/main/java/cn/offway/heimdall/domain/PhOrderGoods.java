@@ -60,7 +60,7 @@ public class PhOrderGoods implements Serializable {
     private String state;
 
     /** 快递批次 **/
-    private Long batch;
+    private String batch;
 
     /** 快递单号 **/
     private String mailNo;
@@ -207,12 +207,12 @@ public class PhOrderGoods implements Serializable {
         this.state = state;
     }
 
-    @Column(name = "batch", length = 11)
-    public Long getBatch() {
+    @Column(name = "batch", length = 5)
+    public String getBatch() {
         return batch;
     }
 
-    public void setBatch(Long batch) {
+    public void setBatch(String batch) {
         this.batch = batch;
     }
 

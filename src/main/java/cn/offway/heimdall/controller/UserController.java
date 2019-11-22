@@ -110,11 +110,32 @@ public class UserController {
 		List<PhOrderInfo> phOrderInfos = page2.getContent();
 		List<OrderInfoDto> dtos = new ArrayList<>();
 		for (PhOrderInfo phOrderInfo : phOrderInfos) {
-			OrderInfoDto dto = new OrderInfoDto();
+			List<String> sum = phOrderGoodsService.orderSum(phOrderInfo.getOrderNo());
+
 			List<PhOrderGoods> goods = phOrderGoodsService.findByOrderNo(phOrderInfo.getOrderNo());
-			BeanUtils.copyProperties(phOrderInfo, dto);
-			dto.setGoods(goods);
-			dtos.add(dto);
+
+			for (String s : sum) {//String s : sum
+				OrderInfoDto dto = new OrderInfoDto();
+				BeanUtils.copyProperties(phOrderInfo, dto);
+				List<PhOrderGoods> goodsList = new ArrayList<>();
+				List<PhOrderGoods> goodsList1 = new ArrayList<>();
+				for (PhOrderGoods good : goods) {
+					if (null == good.getBatch()){
+						goodsList1.add(good);
+					} else if (s.equals(good.getBatch())){
+						goodsList.add(good);
+					}
+				}
+				if (goodsList.size()>0){
+					dto.setOrderNo(dto.getOrderNo()+"-"+s);
+					dto.setGoods(goodsList);
+					dtos.add(dto);
+				}
+				if(goodsList1.size()>0){
+					dto.setGoods(goodsList1);
+					dtos.add(dto);
+				}
+			}
 		}
 		
 		Page<OrderInfoDto> page3 = new PageImpl<>(dtos, new PageRequest(page,size), page2.getTotalElements());
