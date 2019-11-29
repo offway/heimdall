@@ -417,12 +417,13 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 					offwayOrder.setUseDate(phWardrobe.getUseDate());
 					offwayOrder.setUsers(users);
 					offwayOrder.setIsUpload("0");
+					offwayOrder.setAddressId(addrId);
 					phOrderInfos.add(offwayOrder);
-					
+
 					//保存订单物流
 					PhAddress toAddress = phAddressService.findOne(addrId);
 					PhAddress offwayAddress = phAddressService.findOne(1L);
-					
+
 					PhOrderExpressInfo phOrderExpressInfo = new PhOrderExpressInfo();
 					phOrderExpressInfo.setCreateTime(now);
 //					phOrderExpressInfo.setExpressOrderNo(phOrderInfoService.generateOrderNo("SF"));
@@ -468,6 +469,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 				phOrderInfo.setUseDate(phWardrobe.getUseDate());
 				phOrderInfo.setUsers(users);
 				phOrderInfo.setIsUpload("0");
+				phOrderInfo.setAddressId(addrId);
 				phOrderInfos.add(phOrderInfo);
 				map.put(phWardrobe.getBrandId(), phOrderInfo);
 				
@@ -521,7 +523,7 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		
 		
 		phOrderInfoService.save(phOrderInfos);
-		phOrderExpressInfoService.save(phOrderExpressInfos);
+		//phOrderExpressInfoService.save(phOrderExpressInfos);
 		phOrderGoodsService.save(phOrderGoodss);
 		//清除衣柜
 		phWardrobeRepository.delete(wrIds);
