@@ -12,6 +12,9 @@ public class GoodsTpyeDto {
     /**品类**/
     private String category;
 
+    /** 种类 **/
+    private String kind;
+
     public List getSize() {
         return size;
     }
@@ -26,5 +29,13 @@ public class GoodsTpyeDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 }

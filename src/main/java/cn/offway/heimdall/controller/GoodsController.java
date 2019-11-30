@@ -3,12 +3,9 @@ package cn.offway.heimdall.controller;
 import java.util.*;
 import java.util.function.Predicate;
 
-import cn.offway.heimdall.domain.PhGoodsCategory;
-import cn.offway.heimdall.domain.PhGoodsType;
+import cn.offway.heimdall.domain.*;
 import cn.offway.heimdall.dto.GoodsTpyeDto;
 import cn.offway.heimdall.service.*;
-import cn.offway.heimdall.domain.PhGoods;
-import cn.offway.heimdall.domain.PhGoodsStock;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -55,7 +52,9 @@ public class GoodsController {
 
 	@Autowired
 	private PhGoodsCategoryService phGoodsCategoryService;
-	
+
+	@Autowired
+	private PhGoodsKindService phGoodsKindService;
 	
 	@ApiOperation("商品分类")
 	@GetMapping("/classification")
@@ -64,19 +63,27 @@ public class GoodsController {
 		List<Object> categoryList = new ArrayList<>();
 		for (PhGoodsType phGoodsType : goodsType) {
 			Map<String,Object> map = new HashMap<>();
+			List<Object> objectList = new ArrayList<>();
 			List<PhGoodsCategory> phGoodsCategorys = phGoodsCategoryService.findByGoodsType(phGoodsType.getId());
-			List<GoodsTpyeDto> goodsTpyeDtos = new ArrayList<>();
 			for (PhGoodsCategory phGoodsCategory : phGoodsCategorys) {
-				GoodsTpyeDto goodsTpyeDto = new GoodsTpyeDto();
-				String size = phGoodsCategory.getRemark();
-				String[] sizes = size.split(",");
-				List<String> sizesList= Arrays.asList(sizes);
-				goodsTpyeDto.setSize(sizesList);
-				goodsTpyeDto.setCategory(phGoodsCategory.getName());
-				goodsTpyeDtos.add(goodsTpyeDto);
+				Map<String,Object> map0 = new HashMap<>();
+//				List<GoodsTpyeDto> goodsTpyeDtos = new ArrayList<>();
+				List<Object> kinds = new ArrayList<>();
+				List<PhGoodsKind> phGoodsKinds = phGoodsKindService.findByGoodsCategory(phGoodsCategory.getId());
+				for (PhGoodsKind phGoodsKind : phGoodsKinds) {
+					List<Object> kindList = new ArrayList<>();
+//					GoodsTpyeDto goodsTpyeDto = new GoodsTpyeDto();
+//					goodsTpyeDto.setCategory(phGoodsCategory.getName());
+//					goodsTpyeDto.setKind(phGoodsKind.getName());
+//					goodsTpyeDtos.add(goodsTpyeDto);
+					kinds.add(phGoodsKind.getName());
+				}
+				map0.put("type",phGoodsCategory.getName());
+				map0.put("kind",kinds);
+				objectList.add(map0);
 			}
-			map.put("categorys",goodsTpyeDtos);
-			map.put("type",phGoodsType.getName());
+			map.put("name",phGoodsType.getName());
+			map.put("adata",objectList);
 			categoryList.add(map);
 		}
 		return jsonResultHelper.buildSuccessJsonResult(categoryList);
