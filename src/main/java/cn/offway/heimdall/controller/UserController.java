@@ -245,6 +245,7 @@ public class UserController {
 		resultMap.put("return", phOrderInfoService.findAll(unionid, "2").size());
 		resultMap.put("show", phOrderInfoService.findAll(unionid, "4").size());
 		resultMap.put("audit",String.valueOf(phWardrobeAuditService.auditCount(unionid)));
+		resultMap.put("position",phUserInfo.getPosition());
 		
 		return jsonResultHelper.buildSuccessJsonResult(resultMap); 
 	}

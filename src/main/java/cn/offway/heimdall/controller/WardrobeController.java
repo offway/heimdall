@@ -1,9 +1,10 @@
 package cn.offway.heimdall.controller;
 
+import cn.offway.heimdall.domain.PhBrand;
+import cn.offway.heimdall.domain.PhGoods;
 import cn.offway.heimdall.domain.PhWardrobe;
 import cn.offway.heimdall.domain.PhWardrobeAudit;
-import cn.offway.heimdall.service.PhWardrobeAuditService;
-import cn.offway.heimdall.service.PhWardrobeService;
+import cn.offway.heimdall.service.*;
 import cn.offway.heimdall.utils.CommonResultCode;
 import cn.offway.heimdall.utils.JsonResult;
 import cn.offway.heimdall.utils.JsonResultHelper;
@@ -38,7 +39,17 @@ public class WardrobeController {
 
 	@Autowired
 	private PhWardrobeAuditService phWardrobeAuditService;
-	
+
+	@Autowired
+	private SmsService smsService;
+
+	@Autowired
+	private PhGoodsService goodsService;
+
+	@Autowired
+	private PhBrandService brandService;
+
+
 	@ApiOperation(value="加入衣柜",notes="返回码：200=成功； 1009=衣柜调价衣物以至8件上限；1010=您的信用分太低，不能再借衣服；1011=您有一批订单反馈图未上传，上传后即可借衣；1012=有一笔订单未归还")
 	@PostMapping("/add")
 	public JsonResult add(@ApiParam("unionid") @RequestParam String unionid,
@@ -68,7 +79,17 @@ public class WardrobeController {
 							@ApiParam("使用用途") @RequestParam String content,
 							@ApiParam("归还时间") @RequestParam String returnDate,
 							@ApiParam("返图时间") @RequestParam String photoDate) throws ParseException {
-		phWardrobeAuditService.add(unionid,goodsId,color,size,useDate,useName,content,returnDate,photoDate);
+		try {
+			phWardrobeAuditService.add(unionid,goodsId,color,size,useDate,useName,content,returnDate,photoDate);
+			PhGoods goods = goodsService.findOne(goodsId);
+			PhBrand brand = brandService.findOne(goods.getBrandId());
+			//短信通知商家
+			smsService.sendMsgBatch("13012811690", "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看");
+			smsService.sendMsgBatch(brand.getPhone(), "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("短信通知商户异常unionid="+unionid,e);
+		}
 		return jsonResultHelper.buildSuccessJsonResult(null);
 	}
 
