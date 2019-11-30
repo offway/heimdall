@@ -14,4 +14,6 @@ import cn.offway.heimdall.domain.PhOrderExpressInfo;
 public interface PhOrderExpressInfoRepository extends JpaRepository<PhOrderExpressInfo,Long>,JpaSpecificationExecutor<PhOrderExpressInfo> {
 
 	PhOrderExpressInfo findByOrderNoAndType(String orderNo,String type);
+
+	PhOrderExpressInfo findByOrderNoAndTypeAndBatch(String orderNo,String type,String batch);
 }

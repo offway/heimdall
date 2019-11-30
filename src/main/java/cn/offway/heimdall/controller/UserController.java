@@ -175,12 +175,13 @@ public class UserController {
 	@ApiOperation(value="快递路由查询")
 	@GetMapping("/route")
 	public JsonResult route(@ApiParam("订单号") @RequestParam String orderNo,
-			@ApiParam("类型[0-寄,1-返]") @RequestParam String type){
+			@ApiParam("类型[0-寄,1-返]") @RequestParam String type,
+							@ApiParam("批次号") @RequestParam String batch){
 		Map<String, Object> map = new HashMap<>();
 		PhOrderInfo phOrderInfo = phOrderInfoService.findByOrderNo(orderNo);
 		map.put("orderNo", orderNo);
 		map.put("useDate", phOrderInfo.getUseDate());
-		PhOrderExpressInfo phOrderExpressInfo = phOrderExpressInfoService.findByOrderNoAndType(orderNo, type);
+		PhOrderExpressInfo phOrderExpressInfo = phOrderExpressInfoService.findByOrderNoAndTypeAndBatch(orderNo, type,batch);
 		if(null != phOrderExpressInfo){
 			String mailno = phOrderExpressInfo.getMailNo();
 			map.put("toRealName", phOrderExpressInfo.getToRealName());
