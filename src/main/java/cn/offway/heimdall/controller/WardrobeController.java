@@ -84,13 +84,14 @@ public class WardrobeController {
 			PhGoods goods = goodsService.findOne(goodsId);
 			PhBrand brand = brandService.findOne(goods.getBrandId());
 			//短信通知商家
-			smsService.sendMsgBatch("13012811690", "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看");
-			smsService.sendMsgBatch(brand.getPhone(), "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看");
+			smsService.sendMsgBatch("13524430033,"+brand.getPhone(), "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看。");
+			logger.info("短信通知商户发送手机号=13524430033,"+brand.getPhone());
+			return jsonResultHelper.buildSuccessJsonResult(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("短信通知商户异常unionid="+unionid,e);
+			return jsonResultHelper.buildFailJsonResult(CommonResultCode.SYSTEM_ERROR);
 		}
-		return jsonResultHelper.buildSuccessJsonResult(null);
 	}
 
     @ApiOperation("删除审核记录")
@@ -99,13 +100,9 @@ public class WardrobeController {
                                @ApiParam("衣柜ID") @RequestParam Long wardrobeId,
                                @ApiParam("状态[0-审核中,1-审核成功,2-审核失败]") @RequestParam String state){
 	    PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(wardrobeId);
-	    if (unionid.equals(wardrobeAudit.getUnionid())){
-	        if ("0".equals(state) || "1".equals(state)){
-                phWardrobeService.delete(wardrobeId);
-            }else {
-	            phWardrobeAuditService.delete(wardrobeAudit.getId());
-            }
-        }
+		phWardrobeService.delete(wardrobeId);
+		wardrobeAudit.setIsDel("1");
+		phWardrobeAuditService.save(wardrobeAudit);
         return jsonResultHelper.buildSuccessJsonResult(null);
     }
 

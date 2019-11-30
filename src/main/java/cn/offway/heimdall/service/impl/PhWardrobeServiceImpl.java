@@ -106,10 +106,10 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 	
 	@Override
 	public void delete(Long id){
-		PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(id);
-		if (wardrobeAudit != null){
-			phWardrobeAuditService.delete(wardrobeAudit.getId());
-		}
+//		PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(id);
+//		if (wardrobeAudit != null){
+//			phWardrobeAuditService.delete(wardrobeAudit.getId());
+//		}
 		phWardrobeRepository.delete(id);
 	}
 	
@@ -397,7 +397,11 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		List<PhWardrobe> wardrobes = phWardrobeRepository.findByIdIn(wrIds);
 		
 		PhOrderInfo offwayOrder = null;
+		List<PhWardrobeAudit> wardrobeAudits = new ArrayList<>();
 		for (PhWardrobe phWardrobe : wardrobes) {
+			PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(phWardrobe.getId());
+			wardrobeAudit.setIsDel("2");
+			wardrobeAudits.add(wardrobeAudit);
 			
 			PhOrderInfo phOrderInfo = null;
 			if("1".equals(phWardrobe.getIsOffway())){
@@ -521,12 +525,13 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 			
 		}
 		
-		
 		phOrderInfoService.save(phOrderInfos);
 		//phOrderExpressInfoService.save(phOrderExpressInfos);
 		phOrderGoodsService.save(phOrderGoodss);
 		//清除衣柜
 		phWardrobeRepository.delete(wrIds);
+
+		phWardrobeAuditService.save(wardrobeAudits);
 		
 		try {
 			//短信通知61

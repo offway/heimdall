@@ -111,6 +111,7 @@ public class PhWardrobeAuditServiceImpl implements PhWardrobeAuditService {
 		wardrobeAudit.setUseDate(phWardrobe.getUseDate());
 		wardrobeAudit.setCreateTime(new Date());
 		wardrobeAudit.setState("0");
+		wardrobeAudit.setIsDel("0");
 		wardrobeAudit.setReturnDate(DateUtils.parseDate(returnDate, "yyyy-MM-dd"));
 		return phWardrobeAuditRepository.save(wardrobeAudit);
 	}
