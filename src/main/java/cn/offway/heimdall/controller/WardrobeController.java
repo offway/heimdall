@@ -100,9 +100,9 @@ public class WardrobeController {
                                @ApiParam("衣柜ID") @RequestParam Long wardrobeId,
                                @ApiParam("状态[0-审核中,1-审核成功,2-审核失败]") @RequestParam String state){
 	    PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(wardrobeId);
-		phWardrobeService.delete(wardrobeId);
 		wardrobeAudit.setIsDel("1");
 		phWardrobeAuditService.save(wardrobeAudit);
+        phWardrobeService.delete(wardrobeId);
         return jsonResultHelper.buildSuccessJsonResult(null);
     }
 
@@ -143,6 +143,9 @@ public class WardrobeController {
 	public JsonResult del(@ApiParam("衣柜ID") @RequestParam Long[] wardrobeIds) throws Exception{
         List<Long> wrIds = Arrays.asList(wardrobeIds);
         for (Long wrId : wrIds) {
+			PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(wrId);
+			wardrobeAudit.setIsDel("1");
+			phWardrobeAuditService.save(wardrobeAudit);
             phWardrobeService.delete(wrId);
         }
 		return jsonResultHelper.buildSuccessJsonResult(null);

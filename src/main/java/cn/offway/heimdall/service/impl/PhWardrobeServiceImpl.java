@@ -399,9 +399,11 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		PhOrderInfo offwayOrder = null;
 		List<PhWardrobeAudit> wardrobeAudits = new ArrayList<>();
 		for (PhWardrobe phWardrobe : wardrobes) {
-			PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(phWardrobe.getId());
-			wardrobeAudit.setIsDel("2");
-			wardrobeAudits.add(wardrobeAudit);
+			if("0".equals(phWardrobe.getIsOffway())){
+				PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(phWardrobe.getId());
+				wardrobeAudit.setIsDel("2");
+				wardrobeAudits.add(wardrobeAudit);
+			}
 			
 			PhOrderInfo phOrderInfo = null;
 			if("1".equals(phWardrobe.getIsOffway())){

@@ -18,6 +18,6 @@ public interface PhWardrobeAuditRepository extends JpaRepository<PhWardrobeAudit
 
 	PhWardrobeAudit findByWardrobeId(Long id);
 
-	@Query(nativeQuery=true,value="select count(*) from ph_wardrobe_audit where unionid = ?1 and state = 0 and use_date>DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 2 day),'%Y-%m-%d')")
+	@Query(nativeQuery=true,value="select count(*) from ph_wardrobe_audit where unionid = ?1 and  state = 0 and is_del = 0 and use_date>DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 2 day),'%Y-%m-%d')")
 	int auditCount(String unionid);
 }

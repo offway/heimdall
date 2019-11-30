@@ -8,6 +8,11 @@ import java.util.Map;
 
 import cn.offway.heimdall.domain.*;
 import cn.offway.heimdall.service.*;
+import cn.offway.heimdall.utils.HttpClientUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -102,7 +107,7 @@ public class UserController {
 	@GetMapping("/order")
 	public JsonResult order(
 			@ApiParam("用户ID") @RequestParam String unionid,
-			@ApiParam("类型[0-发货中,1-使用中,2-归还中,3-已完成,4-待晒图]") @RequestParam String type,
+			@ApiParam("类型[0-发货中,1-使用中,2-归还中,3-已完成,4-待晒图,5-待发货（不判断使用时间）,6-已寄出（不判断使用时间）]") @RequestParam String type,
 			@ApiParam("页码,从0开始") @RequestParam int page,
 		    @ApiParam("页大小") @RequestParam int size){
 		
@@ -150,12 +155,27 @@ public class UserController {
 		List<PhOrderGoods> goods = phOrderGoodsService.findByOrderNo(orderNo);
 		return jsonResultHelper.buildSuccessJsonResult(goods);
 	}
-	
+
+	private String queryExpress(String expressCode, String mailNo) {
+		String key = "uyUDaSuE5009";
+		String customer = "28B3DE9A2485E14FE0DAD40604A8922C";
+		Map<String, String> innerParam = new HashMap<>();
+		innerParam.put("com", expressCode);
+		innerParam.put("num", mailNo);
+		String innerParamStr = JSON.toJSONString(innerParam);
+		String signStr = innerParamStr + key + customer;
+		String sign = DigestUtils.md5Hex(signStr.getBytes()).toUpperCase();
+		Map<String, String> param = new HashMap<>();
+		param.put("customer", customer);
+		param.put("param", innerParamStr);
+		param.put("sign", sign);
+		return HttpClientUtil.post("https://poll.kuaidi100.com/poll/query.do", param);
+	}
+
 	@ApiOperation(value="快递路由查询")
 	@GetMapping("/route")
 	public JsonResult route(@ApiParam("订单号") @RequestParam String orderNo,
 			@ApiParam("类型[0-寄,1-返]") @RequestParam String type){
-		
 		Map<String, Object> map = new HashMap<>();
 		PhOrderInfo phOrderInfo = phOrderInfoService.findByOrderNo(orderNo);
 		map.put("orderNo", orderNo);
@@ -166,8 +186,12 @@ public class UserController {
 			map.put("toRealName", phOrderExpressInfo.getToRealName());
 			map.put("toPhone", phOrderExpressInfo.getToPhone());
 			map.put("toContent", phOrderExpressInfo.getToContent());
-			List<PhOrderExpressDetail> expressDetails = phOrderExpressDetailService.findByMailNoOrderByAcceptTimeDesc(mailno);
-			map.put("expressDetails", expressDetails);
+			map.put("toProvince",phOrderExpressInfo.getToProvince());
+			map.put("toCity",phOrderExpressInfo.getToCity());
+			map.put("toCounty",phOrderExpressInfo.getToCounty());
+			String json = queryExpress("shunfeng",phOrderExpressInfo.getMailNo());
+			JSONObject jsonObject = JSONObject.parseObject(json);
+			map.put("details",jsonObject);
 		}
 		return jsonResultHelper.buildSuccessJsonResult(map);
 	}
@@ -240,10 +264,11 @@ public class UserController {
 		resultMap.put("nickname", phUserInfo.getNickname());
 		resultMap.put("headimgurl", phUserInfo.getHeadimgurl());
 		resultMap.put("creditScore", phUserInfo.getCreditScore());
-		resultMap.put("sendout", phOrderInfoService.findAll(unionid, "0").size());
+		resultMap.put("sendout", phOrderInfoService.findAll(unionid, "5").size());
 		resultMap.put("use", phOrderInfoService.findAll(unionid, "1").size());
 		resultMap.put("return", phOrderInfoService.findAll(unionid, "2").size());
 		resultMap.put("show", phOrderInfoService.findAll(unionid, "4").size());
+		resultMap.put("send",phOrderInfoService.findAll(unionid, "6").size());
 		resultMap.put("audit",String.valueOf(phWardrobeAuditService.auditCount(unionid)));
 		resultMap.put("position",phUserInfo.getPosition());
 		

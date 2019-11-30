@@ -20,7 +20,7 @@ public interface PhWardrobeRepository extends JpaRepository<PhWardrobe,Long>,Jpa
 	@Query(nativeQuery=true,value="select * from ph_wardrobe w where w.unionid=?1  ORDER BY w.create_time desc")
 	List<PhWardrobe> findByUnionid(String unionid);
 	
-	@Query(nativeQuery=true,value="select * from ph_wardrobe w where w.unionid=?1 and w.use_date>DATE_FORMAT(NOW(),'%Y-%m-%d') and EXISTS(select 1 from ph_goods_stock gs where gs.goods_id = w.goods_id and gs.size = w.size and gs.color=w.color and gs.stock>0 ) ORDER BY w.create_time desc")
+	@Query(nativeQuery=true,value="select * from ph_wardrobe w where w.unionid=?1 and w.state in (3,2) and w.use_date>DATE_FORMAT(NOW(),'%Y-%m-%d') and EXISTS(select 1 from ph_goods_stock gs where gs.goods_id = w.goods_id and gs.size = w.size and gs.color=w.color and gs.stock>0 ) ORDER BY w.create_time desc")
 	List<PhWardrobe> findEffectByUnionid(String unionid);
 	
 	@Modifying

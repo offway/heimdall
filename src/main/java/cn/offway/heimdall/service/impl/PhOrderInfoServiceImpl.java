@@ -144,6 +144,13 @@ public class PhOrderInfoServiceImpl implements PhOrderInfoService {
 					}else if("4".equals(type)){
 						params.add(criteriaBuilder.lessThanOrEqualTo(root.get("useDate"), DateUtils.parseDate(DateFormatUtils.format(now, "yyyy-MM-dd"), "yyyy-MM-dd")));
 						params.add(criteriaBuilder.notEqual(root.get("isUpload"), "1"));
+					}else if("5".equals(type)){
+						params.add(criteriaBuilder.equal(root.get("status"), "0"));
+					}else if ("6".equals(type)){
+						In<String> in = criteriaBuilder.in(root.get("status"));
+						in.value("7");
+						in.value("1");
+						params.add(in);
 					}
 					
 				} catch (Exception e) {
@@ -173,7 +180,7 @@ public class PhOrderInfoServiceImpl implements PhOrderInfoService {
 				
 				Date now = new Date();
 				try {
-					//0-发货中,1-使用中,2-归还中,3-已完成
+					//0-发货中,1-使用中,2-归还中,3-已完成,5-待发货，6-已寄出（不判断使用时间）
 					if("0".equals(type)){
 						//使用日期之前
 						In<String> in = criteriaBuilder.in(root.get("status"));
@@ -193,6 +200,13 @@ public class PhOrderInfoServiceImpl implements PhOrderInfoService {
 						params.add(criteriaBuilder.notEqual(root.get("isUpload"), "1"));
 						params.add(criteriaBuilder.lessThanOrEqualTo(root.get("useDate"), DateUtils.parseDate(DateFormatUtils.format(now, "yyyy-MM-dd"), "yyyy-MM-dd")));
 
+					}else if("5".equals(type)){
+						params.add(criteriaBuilder.equal(root.get("status"), "0"));
+					}else if ("6".equals(type)){
+						In<String> in = criteriaBuilder.in(root.get("status"));
+						in.value("7");
+						in.value("1");
+						params.add(in);
 					}
 					
 				} catch (Exception e) {
