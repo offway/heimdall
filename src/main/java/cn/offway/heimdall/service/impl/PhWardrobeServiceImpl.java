@@ -212,6 +212,9 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		for (PhWardrobe wr : all) {
 			boolean exists = false;
 			for (PhWardrobe w : eff) {
+				if ("2".equals(wr.getState())){
+					break;
+				}
 				if(wr.getId().longValue() == w.getId().longValue()){
 					exists = true;
 					break;
@@ -246,10 +249,16 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 					logger.info("正常");
 				}
 			}else {
-				//缺货
-				wr.setRemark("0");
-				invalids.add(wr);
-				logger.info("缺货");
+				if ("2".equals(wr.getState())){
+					//审核失败
+					wr.setRemark("2");
+					invalids.add(wr);
+				}else {
+					//缺货
+					wr.setRemark("0");
+					invalids.add(wr);
+					logger.info("缺货");
+				}
 			}
 		}
 		
