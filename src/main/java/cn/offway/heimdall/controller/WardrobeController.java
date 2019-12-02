@@ -144,8 +144,10 @@ public class WardrobeController {
         List<Long> wrIds = Arrays.asList(wardrobeIds);
         for (Long wrId : wrIds) {
 			PhWardrobeAudit wardrobeAudit = phWardrobeAuditService.findByWardrobeId(wrId);
-			wardrobeAudit.setIsDel("1");
-			phWardrobeAuditService.save(wardrobeAudit);
+			if(null != wardrobeAudit){
+				wardrobeAudit.setIsDel("1");
+				phWardrobeAuditService.save(wardrobeAudit);
+			}
             phWardrobeService.delete(wrId);
         }
 		return jsonResultHelper.buildSuccessJsonResult(null);
