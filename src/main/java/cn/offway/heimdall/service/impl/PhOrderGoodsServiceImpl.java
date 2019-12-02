@@ -52,4 +52,14 @@ public class PhOrderGoodsServiceImpl implements PhOrderGoodsService {
 	public List<String> orderSum(String orderNo){
 		return phOrderGoodsRepository.orderSum(orderNo);
 	}
+
+	@Override
+	public List<PhOrderGoods> findByOrderNoAndBatch(String orderNo,String batch){
+		return phOrderGoodsRepository.findByOrderNoAndBatch(orderNo,batch);
+	}
+
+	@Override
+	public List<PhOrderGoods> findByOrderNoAndState(String orderNo,String state){
+		return phOrderGoodsRepository.findByOrderNoAndState(orderNo,state);
+	}
 }

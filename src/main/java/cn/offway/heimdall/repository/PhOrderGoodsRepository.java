@@ -21,4 +21,8 @@ public interface PhOrderGoodsRepository extends JpaRepository<PhOrderGoods,Long>
 	List<String> orderSum(String orderNo);
 
 	List<PhOrderGoods> findByOrderNo(String orderNo);
+
+	List<PhOrderGoods> findByOrderNoAndBatch(String orderNo,String batch);
+
+	List<PhOrderGoods> findByOrderNoAndState(String orderNo,String state);
 }
