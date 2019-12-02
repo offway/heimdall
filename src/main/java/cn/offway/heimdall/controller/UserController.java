@@ -63,6 +63,9 @@ public class UserController {
     @Autowired
     private PhWardrobeAuditService phWardrobeAuditService;
 
+    @Autowired
+    private PhAddressBrandService phAddressBrandService;
+
 
     @ApiOperation("校验邀请码")
     @GetMapping("/code")
@@ -188,10 +191,20 @@ public class UserController {
     @ApiOperation(value = "快递状态查询", notes = "返回 status [1-已下单,2-已接单,3-运送中,4-已签收]")
     @GetMapping("/express")
     public JsonResult express(@ApiParam("订单号") @RequestParam String orderNo,
+                              @ApiParam("批次") @RequestParam String batch,
                               @ApiParam("类型[0-寄,1-返]") @RequestParam String type) {
+        if ("0".equals(type)){
+            Map<String,Object> map = new HashMap<>();
+            PhOrderExpressInfo phOrderExpressInfo = phOrderExpressInfoService.findByOrderNoAndTypeAndBatch(orderNo, type, batch);
+            PhAddressBrand addressBrand = phAddressBrandService.findOne(phOrderExpressInfo.getReturnId());
+            map.put("phOrderExpressInfo",phOrderExpressInfo);
+            map.put("addressBrand",addressBrand);
+            return jsonResultHelper.buildSuccessJsonResult(map);
+        }else {
+            PhOrderExpressInfo phOrderExpressInfo = phOrderExpressInfoService.findByOrderNoAndType(orderNo, type);
+            return jsonResultHelper.buildSuccessJsonResult(phOrderExpressInfo);
+        }
 
-        PhOrderExpressInfo phOrderExpressInfo = phOrderExpressInfoService.findByOrderNoAndType(orderNo, type);
-        return jsonResultHelper.buildSuccessJsonResult(phOrderExpressInfo);
     }
 
     @ApiOperation(value = "已晒图列表")
@@ -284,8 +297,9 @@ public class UserController {
             @ApiParam("订单号") @RequestParam String orderNo,
             @ApiParam("要求上门取件开始时间，格式：YYYY-MM-DD HH24:MM:SS，示例：2012-7-30 09:30:00。两小时内上门不传该字段") @RequestParam(required = false) String sendstarttime,
             @ApiParam("快递单号,自行投递必传") @RequestParam(required = false) String mailNo,
+            @ApiParam("批次") @RequestParam String batch,
             @ApiParam("地址ID") @RequestParam(required = false) Long addrId) {
-        return phOrderInfoService.saveOrder(orderNo, null == sendstarttime ? "" : sendstarttime, mailNo, addrId);
+        return phOrderInfoService.saveOrder(orderNo, null == sendstarttime ? "" : sendstarttime, mailNo, addrId, batch);
     }
 
 }

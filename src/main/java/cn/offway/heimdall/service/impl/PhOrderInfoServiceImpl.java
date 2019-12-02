@@ -10,11 +10,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import cn.offway.heimdall.domain.PhOrderInfo;
-import cn.offway.heimdall.service.PhAddressService;
-import cn.offway.heimdall.service.PhOrderExpressInfoService;
-import cn.offway.heimdall.service.PhOrderInfoService;
-import cn.offway.heimdall.service.SfExpressService;
+import cn.offway.heimdall.domain.*;
+import cn.offway.heimdall.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -26,8 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import cn.offway.heimdall.domain.PhAddress;
-import cn.offway.heimdall.domain.PhOrderExpressInfo;
 import cn.offway.heimdall.domain.PhOrderInfo;
 import cn.offway.heimdall.dto.sf.ReqAddOrder;
 import cn.offway.heimdall.repository.PhOrderInfoRepository;
@@ -65,6 +60,9 @@ public class PhOrderInfoServiceImpl implements PhOrderInfoService {
 	
 	@Autowired
 	private PhAddressService phAddressService;
+
+	@Autowired
+	private PhAddressBrandService phAddressBrandService;
 	
 	@Override
 	public PhOrderInfo save(PhOrderInfo phOrderInfo){
@@ -226,16 +224,18 @@ public class PhOrderInfoServiceImpl implements PhOrderInfoService {
 	}
 	
 	@Override
-	public JsonResult saveOrder(String orderNo,String sendstarttime,String mailNo,Long addrId){
+	public JsonResult saveOrder(String orderNo,String sendstarttime,String mailNo,Long addrId,String batch){
 		PhOrderInfo phOrderInfo = findByOrderNo(orderNo);
 		if("2".equals(phOrderInfo.getStatus())){
 			return jsonResultHelper.buildFailJsonResult(CommonResultCode.ORDER_BACK);
 		}
 		
-		PhOrderExpressInfo expressInfo = phOrderExpressInfoService.findByOrderNoAndType(orderNo, "0");
+		PhOrderExpressInfo expressInfo = phOrderExpressInfoService.findByOrderNoAndTypeAndBatch(orderNo, "0",batch);
+		PhAddressBrand addressBrand = phAddressBrandService.findOne(expressInfo.getReturnId());
 		PhOrderExpressInfo phOrderExpressInfo = new PhOrderExpressInfo();
 		phOrderExpressInfo.setCreateTime(new Date());
 		phOrderExpressInfo.setExpressOrderNo(generateOrderNo("SF"));
+		phOrderExpressInfo.setBatch(expressInfo.getBatch());
 		if(null != addrId){
 			PhAddress phAddress = phAddressService.findOne(addrId);
 			phOrderExpressInfo.setFromPhone(phAddress.getPhone());
@@ -254,12 +254,12 @@ public class PhOrderInfoServiceImpl implements PhOrderInfoService {
 			phOrderExpressInfo.setFromRealName(expressInfo.getToRealName());
 		}
 		phOrderExpressInfo.setOrderNo(phOrderInfo.getOrderNo());
-		phOrderExpressInfo.setToPhone(expressInfo.getFromPhone());
-		phOrderExpressInfo.setToCity(expressInfo.getFromCity());
-		phOrderExpressInfo.setToContent(expressInfo.getFromContent());
-		phOrderExpressInfo.setToCounty(expressInfo.getFromCounty());
-		phOrderExpressInfo.setToProvince(expressInfo.getFromProvince());
-		phOrderExpressInfo.setToRealName(expressInfo.getFromRealName());
+		phOrderExpressInfo.setToPhone(addressBrand.getPhone());
+		phOrderExpressInfo.setToCity(addressBrand.getCity());
+		phOrderExpressInfo.setToContent(addressBrand.getContent());
+		phOrderExpressInfo.setToCounty(addressBrand.getCounty());
+		phOrderExpressInfo.setToProvince(addressBrand.getProvince());
+		phOrderExpressInfo.setToRealName(addressBrand.getRealName());
 		phOrderExpressInfo.setType("1");
 		
 		
