@@ -228,7 +228,7 @@ public class UserController {
                                 @ApiParam("网页链接") @RequestParam(required = false) String url,
                                 @ApiParam("描述") @RequestParam(required = false) String content,
                                 @ApiParam("批次") @RequestParam String batch,
-                                @ApiParam("使用明星") @RequestParam String starName) {
+                                @ApiParam("使用明星") @RequestParam(required = false, defaultValue = "") String starName) {
 
         PhOrderInfo phOrderInfo = phOrderInfoService.findByOrderNo(orderNo);
 
