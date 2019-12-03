@@ -79,7 +79,7 @@ public class WardrobeController {
 							@ApiParam("使用用途") @RequestParam String content,
 							@ApiParam("归还时间") @RequestParam String returnDate,
 							@ApiParam("返图时间") @RequestParam String photoDate,
-							@ApiParam("表单提交场景下，为 submit 事件带上的 formId；支付场景下，为本次支付的 prepay_id") @RequestParam String formId) {
+							@ApiParam("表单提交场景下，为 submit 事件带上的 formId；支付场景下，为本次支付的 prepay_id") @RequestParam(required = false, defaultValue = "") String formId) {
 		try {
 			phWardrobeAuditService.add(unionid, goodsId, color, size, useDate, useName, content, returnDate, photoDate, formId);
 			PhGoods goods = goodsService.findOne(goodsId);
