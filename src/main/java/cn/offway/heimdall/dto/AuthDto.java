@@ -35,9 +35,9 @@ public class AuthDto {
     
     @ApiModelProperty(required = true, value ="邀请码")
     private String code;
-    
-    @ApiModelProperty(required = true, value ="表单提交场景下，为 submit 事件带上的 formId；支付场景下，为本次支付的 prepay_id")
-    private String formId;
+
+	@ApiModelProperty(required = false, allowEmptyValue = true, value = "表单提交场景下，为 submit 事件带上的 formId；支付场景下，为本次支付的 prepay_id")
+	private String formId;
 
 	public String getUnionid() {
 		return unionid;
