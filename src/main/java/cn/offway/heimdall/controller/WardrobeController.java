@@ -78,18 +78,19 @@ public class WardrobeController {
 							@ApiParam("使用艺人") @RequestParam String useName,
 							@ApiParam("使用用途") @RequestParam String content,
 							@ApiParam("归还时间") @RequestParam String returnDate,
-							@ApiParam("返图时间") @RequestParam String photoDate) throws ParseException {
+							@ApiParam("返图时间") @RequestParam String photoDate,
+							@ApiParam("表单提交场景下，为 submit 事件带上的 formId；支付场景下，为本次支付的 prepay_id") @RequestParam String formId) {
 		try {
-			phWardrobeAuditService.add(unionid,goodsId,color,size,useDate,useName,content,returnDate,photoDate);
+			phWardrobeAuditService.add(unionid, goodsId, color, size, useDate, useName, content, returnDate, photoDate, formId);
 			PhGoods goods = goodsService.findOne(goodsId);
 			PhBrand brand = brandService.findOne(goods.getBrandId());
 			//短信通知商家
-			smsService.sendMsgBatch("13524430033,"+brand.getPhone(), "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看。");
-			logger.info("短信通知商户发送手机号=13524430033,"+brand.getPhone());
+			smsService.sendMsgBatch("13524430033," + brand.getPhone(), "【OFFWAY】您有一件OFFWAY MODE SHOWROOM的借衣商品待审核，请及时进入后台查看。");
+			logger.info("短信通知商户发送手机号=13524430033," + brand.getPhone());
 			return jsonResultHelper.buildSuccessJsonResult(null);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("短信通知商户异常unionid="+unionid,e);
+			logger.error("短信通知商户异常unionid=" + unionid, e);
 			return jsonResultHelper.buildFailJsonResult(CommonResultCode.SYSTEM_ERROR);
 		}
 	}

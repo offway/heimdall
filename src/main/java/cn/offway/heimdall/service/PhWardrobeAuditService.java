@@ -1,11 +1,11 @@
 package cn.offway.heimdall.service;
 
 
-import java.text.ParseException;
-import java.util.List;
-
 import cn.offway.heimdall.domain.PhWardrobeAudit;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * 衣柜审核Service接口
@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author wn
  * @version $v: 1.0.0, $time:2019-11-20 14:44:49 Exp $
  */
-public interface PhWardrobeAuditService{
+public interface PhWardrobeAuditService {
 
     PhWardrobeAudit save(PhWardrobeAudit phWardrobeAudit);
-	
+
     PhWardrobeAudit findOne(Long id);
 
     void delete(Long id);
@@ -26,7 +26,7 @@ public interface PhWardrobeAuditService{
     PhWardrobeAudit findByWardrobeId(Long id);
 
     @Transactional
-    PhWardrobeAudit add(String unionid, Long goodsId, String color, String size, String useDate, String useName, String content, String returnDate, String photoDate) throws ParseException;
+    PhWardrobeAudit add(String unionid, Long goodsId, String color, String size, String useDate, String useName, String content, String returnDate, String photoDate, String formId) throws ParseException;
 
     int auditCount(String unionid);
 }
