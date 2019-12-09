@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import cn.offway.heimdall.domain.*;
 import cn.offway.heimdall.dto.GoodsTpyeDto;
+import cn.offway.heimdall.repository.PhGoodsRepository;
 import cn.offway.heimdall.service.*;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -55,6 +56,9 @@ public class GoodsController {
 
 	@Autowired
 	private PhGoodsKindService phGoodsKindService;
+
+	@Autowired
+	private PhGoodsPropertyService phGoodsPropertyService;
 	
 	@ApiOperation("商品分类")
 	@GetMapping("/classification")
@@ -252,8 +256,14 @@ public class GoodsController {
 		//Map<String, String> colorImg = new HashMap<>();
 		for (PhGoodsStock phGoodsStock : phGoodsStocks) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("size", phGoodsStock.getSize());
-			map.put("color", phGoodsStock.getColor());
+			List<PhGoodsProperty> goodsPropertys = phGoodsPropertyService.findByGoodsId(phGoodsStock.getGoodsId());
+			for (PhGoodsProperty goodsProperty : goodsPropertys) {
+				if ("颜色".equals(goodsProperty.getName())){
+					map.put("color", goodsProperty.getValue());
+				}else if ("尺寸".equals(goodsProperty.getName())){
+					map.put("size", goodsProperty.getValue());
+				}
+			}
 			map.put("stock", phGoodsStock.getStock());
 			map.put("img", phGoodsStock.getImage());
 			list.add(map);
