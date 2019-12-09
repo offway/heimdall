@@ -256,21 +256,36 @@ public class GoodsController {
 		//Map<String, String> colorImg = new HashMap<>();
 		for (PhGoodsStock phGoodsStock : phGoodsStocks) {
 			Map<String, Object> map = new HashMap<>();
-			List<PhGoodsProperty> goodsPropertys = phGoodsPropertyService.findByGoodsId(phGoodsStock.getGoodsId());
+			List<PhGoodsProperty> goodsPropertys = phGoodsPropertyService.findByGoodsStockId(phGoodsStock.getId());
+			List<Object> listSize = new ArrayList<>();
+			List<Object> listColor = new ArrayList<>();
 			for (PhGoodsProperty goodsProperty : goodsPropertys) {
+				Map<String,Object> map1 = new HashMap<>();
 				if ("颜色".equals(goodsProperty.getName())){
-					map.put("color", goodsProperty.getValue());
+					listSize.add(goodsProperty.getValue());
 				}else if ("尺寸".equals(goodsProperty.getName())){
-					map.put("size", goodsProperty.getValue());
+					listColor.add(goodsProperty.getValue());
 				}
 			}
+			map.put("size", listSize);
+			map.put("color", listColor);
 			map.put("stock", phGoodsStock.getStock());
 			map.put("img", phGoodsStock.getImage());
 			list.add(map);
 			sizes.add(phGoodsStock.getSize());
 			colors.add(phGoodsStock.getColor());
-			
+
 			//colorImg.put(phGoodsStock.getColor(), phGoodsStock.getImage());
+//			List<Object> listSize = new ArrayList<>();
+//			List<Object> listColor = new ArrayList<>();
+//			for (PhGoodsProperty goodsProperty : goodsPropertys) {
+//				Map<String,Object> map1 = new HashMap<>();
+//				if ("颜色".equals(goodsProperty.getName())){
+//					listSize.add(goodsProperty.getValue());
+//				}else if ("尺寸".equals(goodsProperty.getName())){
+//					listColor.add(goodsProperty.getValue());
+//				}
+//			}
 
 		}
 		

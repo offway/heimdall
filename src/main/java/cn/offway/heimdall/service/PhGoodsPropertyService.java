@@ -21,5 +21,5 @@ public interface PhGoodsPropertyService{
 
     List<PhGoodsProperty> save(List<PhGoodsProperty> entities);
 
-    List<PhGoodsProperty> findByGoodsId(Long id);
+    List<PhGoodsProperty> findByGoodsStockId(Long id);
 }

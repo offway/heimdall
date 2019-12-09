@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface PhGoodsPropertyRepository extends JpaRepository<PhGoodsProperty,Long>,JpaSpecificationExecutor<PhGoodsProperty> {
 
-    List<PhGoodsProperty> findByGoodsId(Long id);
+    List<PhGoodsProperty> findByGoodsStockId(Long id);
 }

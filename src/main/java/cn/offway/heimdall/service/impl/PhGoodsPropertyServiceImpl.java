@@ -47,7 +47,7 @@ public class PhGoodsPropertyServiceImpl implements PhGoodsPropertyService {
 	}
 
 	@Override
-	public List<PhGoodsProperty> findByGoodsId(Long id){
-		return phGoodsPropertyRepository.findByGoodsId(id);
+	public List<PhGoodsProperty> findByGoodsStockId(Long id){
+		return phGoodsPropertyRepository.findByGoodsStockId(id);
 	}
 }
