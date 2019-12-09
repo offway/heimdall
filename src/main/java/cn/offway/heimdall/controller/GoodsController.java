@@ -263,8 +263,10 @@ public class GoodsController {
 				Map<String,Object> map1 = new HashMap<>();
 				if ("颜色".equals(goodsProperty.getName())){
 					listSize.add(goodsProperty.getValue());
-				}else if ("尺寸".equals(goodsProperty.getName())){
+					colors.add(goodsProperty.getValue());
+				}else{
 					listColor.add(goodsProperty.getValue());
+					sizes.add(goodsProperty.getValue());
 				}
 			}
 			map.put("size", listSize);
@@ -272,8 +274,8 @@ public class GoodsController {
 			map.put("stock", phGoodsStock.getStock());
 			map.put("img", phGoodsStock.getImage());
 			list.add(map);
-			sizes.add(phGoodsStock.getSize());
-			colors.add(phGoodsStock.getColor());
+
+
 
 			//colorImg.put(phGoodsStock.getColor(), phGoodsStock.getImage());
 //			List<Object> listSize = new ArrayList<>();
