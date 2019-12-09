@@ -22,4 +22,6 @@ public interface PhGoodsStockService{
 	int updateStock(Long wrId);
 
 	PhGoodsStock findByGoodsIdAndSizeAndColor(Long goodsId, String size, String color);
+
+	PhGoodsStock findByGoodsIdAndRemark(Long goodsId, String remaek);
 }

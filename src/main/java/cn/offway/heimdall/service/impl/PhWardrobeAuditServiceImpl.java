@@ -84,7 +84,8 @@ public class PhWardrobeAuditServiceImpl implements PhWardrobeAuditService {
         phWardrobe.setGoodsId(goodsId);
         phWardrobe.setGoodsName(phGoods.getName());
         phWardrobe.setSize(size);
-        PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndSizeAndColor(phWardrobe.getGoodsId(), phWardrobe.getSize(), phWardrobe.getColor());
+        String remark = phWardrobe.getColor() +"_"+ phWardrobe.getSize()+"_";
+        PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndRemark(phWardrobe.getGoodsId(), remark);
         phWardrobe.setImage(phGoodsStock.getImage());
         phWardrobe.setIsOffway(phGoods.getIsOffway());
         phWardrobe.setType(phGoods.getType());
