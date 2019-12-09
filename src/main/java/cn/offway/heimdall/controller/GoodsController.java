@@ -262,10 +262,10 @@ public class GoodsController {
 			for (PhGoodsProperty goodsProperty : goodsPropertys) {
 				Map<String,Object> map1 = new HashMap<>();
 				if ("颜色".equals(goodsProperty.getName())){
-					listSize.add(goodsProperty.getValue());
+					listColor.add(goodsProperty.getValue());
 					colors.add(goodsProperty.getValue());
 				}else{
-					listColor.add(goodsProperty.getValue());
+					listSize.add(goodsProperty.getValue());
 					sizes.add(goodsProperty.getValue());
 				}
 			}
