@@ -3,7 +3,9 @@ package cn.offway.heimdall.service.impl;
 import java.util.List;
 
 import cn.offway.heimdall.domain.PhGoodsStock;
+import cn.offway.heimdall.domain.PhWardrobe;
 import cn.offway.heimdall.service.PhGoodsStockService;
+import cn.offway.heimdall.service.PhWardrobeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,10 @@ public class PhGoodsStockServiceImpl implements PhGoodsStockService {
 
 	@Autowired
 	private PhGoodsStockRepository phGoodsStockRepository;
-	
+
+	@Autowired
+	private PhWardrobeService phWardrobeService;
+
 	@Override
 	public PhGoodsStock save(PhGoodsStock phGoodsStock){
 		return phGoodsStockRepository.save(phGoodsStock);
@@ -43,7 +48,10 @@ public class PhGoodsStockServiceImpl implements PhGoodsStockService {
 	
 	@Override
 	public int updateStock(Long wrId){
-		return phGoodsStockRepository.updateStock(wrId);
+		PhWardrobe phWardrobe = phWardrobeService.findOne(wrId);
+		String remaek = phWardrobe.getColor()+"_"+phWardrobe.getSize()+"_";
+		PhGoodsStock phGoodsStock = findByGoodsIdAndRemark(phWardrobe.getGoodsId(),remaek);
+		return phGoodsStockRepository.updateStock(phGoodsStock.getId());
 	}
 	
 	@Override
@@ -52,7 +60,7 @@ public class PhGoodsStockServiceImpl implements PhGoodsStockService {
 	}
 
 	@Override
-	public PhGoodsStock findByGoodsIdAndRemark(Long goodsId,String remaek){
+	public PhGoodsStock findByGoodsIdAndRemark(Long goodsId, String remaek){
 		return phGoodsStockRepository.findByGoodsIdAndRemark(goodsId,remaek);
 	}
 }

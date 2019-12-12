@@ -158,7 +158,8 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 		phWardrobe.setGoodsId(goodsId);
 		phWardrobe.setGoodsName(phGoods.getName());
 		phWardrobe.setSize(size);
-		PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndSizeAndColor(phWardrobe.getGoodsId(), phWardrobe.getSize(), phWardrobe.getColor());
+		String remark = phWardrobe.getColor() +"_"+ phWardrobe.getSize()+"_";
+		PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndRemark(phWardrobe.getGoodsId(),remark);
 		phWardrobe.setImage(phGoodsStock.getImage());
 		phWardrobe.setIsOffway(phGoods.getIsOffway());
 		phWardrobe.setType(phGoods.getType());
@@ -505,7 +506,8 @@ public class PhWardrobeServiceImpl implements PhWardrobeService {
 			phOrderGoods.setCreateTime(now);
 			phOrderGoods.setGoodsId(phWardrobe.getGoodsId());
 			phOrderGoods.setGoodsName(phWardrobe.getGoodsName());
-			PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndSizeAndColor(phWardrobe.getGoodsId(), phWardrobe.getSize(), phWardrobe.getColor());
+			String remark = phWardrobe.getColor() +"_"+ phWardrobe.getSize()+"_";
+			PhGoodsStock phGoodsStock = phGoodsStockService.findByGoodsIdAndRemark(phWardrobe.getGoodsId(), remark);
 			phOrderGoods.setStockId(phGoodsStock.getId());
 			phOrderGoods.setSku(phGoodsStock.getSku());
 			phOrderGoods.setBatch("0");
