@@ -83,6 +83,7 @@ public class GoodsController {
 					kinds.add(phGoodsKind.getName());
 				}
 				map0.put("type",phGoodsCategory.getName());
+				map0.put("image",phGoodsCategory.getImage());
 				map0.put("kind",kinds);
 				objectList.add(map0);
 			}
